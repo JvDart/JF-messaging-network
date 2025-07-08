@@ -35,7 +35,8 @@ public class Phone extends Device implements Exportable<List<String>> {
     @Override
     public void receiveMessage(Message msg) {
         if (msg.getContent() == null || msg.getContent().trim().isEmpty()) return; //No almacenar msg vacios
-        if (msg.getType() == MessageType.SYSTEM && !"SYSTEM".equals(getName())) return;//Ignorar mensajes que no vienen de "SYSTEM"
+        if (msg.getSender() != "SYSTEM" && msg.getType() == MessageType.SYSTEM) return;
+        //Ignorar msg que no vienen (Sender) de "SYSTEM" y MessageType no es SYSTEM
         addMessage(msg);
     }
 

@@ -3,7 +3,7 @@ package com.aroldev.messagingnetwork;
 abstract public class Device {
     private String name;
     private int id;
-    private boolean darkmode;
+    private boolean darkMode;
 
 
     abstract public void sendMessage(Message msg);
@@ -12,13 +12,13 @@ abstract public class Device {
     public Device(String name, int id) {
         this.name = name;
         this.id = id;
-        this.darkmode = darkmode;
+        this.darkMode = darkMode;
     }
 
-    public boolean isDarkmode() {return darkmode; }
+    public boolean getDarkMode() {return darkMode; }
 
-    public void setDarkmode(boolean darkmode) {
-        this.darkmode = darkmode;
+    public void setDarkMode(boolean darkmode) {
+        this.darkMode = darkmode;
     }
 
     public int getId() {return id;}
