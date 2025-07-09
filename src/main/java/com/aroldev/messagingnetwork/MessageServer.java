@@ -1,20 +1,36 @@
 package com.aroldev.messagingnetwork;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class MessageServer implements Runnable {
-    public Queue<Message> queue;
+    private final Queue<Message> messageQueue;
+
+
+    // Constructor sin argumentos requerido por el test
+    public MessageServer() {
+        this.messageQueue = new LinkedList<>();
+    }
 
     public MessageServer(Queue<Message> queue) {
-        this.queue = queue;
+        this.messageQueue = queue;
     }
+
+
+    // Metodo requerido por el test
+    public synchronized void addMessage(Message msg) {
+        synchronized (messageQueue) {
+            messageQueue.add(msg);
+        }
+    }
+
 
     @Override
     public void run() {
         while (true) {
-            synchronized (queue) {
-                if (!queue.isEmpty()) {
-                    Message msg = queue.poll();
+            synchronized (messageQueue) {
+                if (!messageQueue.isEmpty()) {
+                    Message msg = messageQueue.poll();
                     System.out.println("Procesando mensaje: " + msg.getContent());
                 }
             }
