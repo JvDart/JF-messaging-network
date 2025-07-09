@@ -23,13 +23,14 @@ public class Phone extends Device implements Exportable<List<String>> {
     }
 
     @Override
-    public void sendMessage(Message msg) {
+    public void sendMessage(Message msg) throws InvalidMessageException {
         try {
             validateMessage(msg);
             System.out.println("Enviando mensaje: " + msg.getContent());
             addMessage(msg);
         } catch (InvalidMessageException e) {
             System.err.println("Error: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -37,7 +38,7 @@ public class Phone extends Device implements Exportable<List<String>> {
         //VALIDAMOS MSG NO NULL Y TAMAÑO DE CONTENIDO
         if (msg == null || msg.getContent() == null || msg.getContent().trim().length() < 2
                 ) {
-            throw new InvalidMessageException("Mensaje inválido: contenido nulo o demasiado corto.");
+            throw new InvalidMessageException("Mensaje inválido/ invalid: contenido nulo o demasiado corto.");
         }
         //VALIDAMOS QUE PROVIENEN DE SENDER SYSTEM
         if (msg.getType() == MessageType.SYSTEM && !"SYSTEM".equals(msg.getSender())) {

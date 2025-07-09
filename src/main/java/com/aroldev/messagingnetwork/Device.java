@@ -1,18 +1,20 @@
 package com.aroldev.messagingnetwork;
 
+import com.aroldev.messagingnetwork.Exceptions.InvalidMessageException;
+
 abstract public class Device {
     private String name;
     private int id;
     private boolean darkMode;
 
 
-    abstract public void sendMessage(Message msg);
+    abstract public void sendMessage(Message msg) throws InvalidMessageException;
     abstract public void receiveMessage(Message msg);
 
     public Device(String name, int id) {
         this.name = name;
         this.id = id;
-        this.darkMode = darkMode;
+        this.darkMode = false;
     }
 
     public boolean getDarkMode() {return darkMode; }
