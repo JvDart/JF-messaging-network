@@ -3,7 +3,7 @@ package com.aroldev.messagingnetwork;
 import java.util.Queue;
 
 public class MessageServer implements Runnable {
-    private final Queue<Message> queue;
+    public Queue<Message> queue;
 
     public MessageServer(Queue<Message> queue) {
         this.queue = queue;

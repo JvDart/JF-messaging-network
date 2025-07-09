@@ -1,6 +1,7 @@
 package com.aroldev.messagingnetwork;
 
 import com.aroldev.messagingnetwork.Enum.MessageType;
+import com.aroldev.messagingnetwork.Exceptions.InvalidMessageException;
 import com.aroldev.messagingnetwork.Interfaces.Exportable;
 
 import java.util.List;
@@ -32,15 +33,29 @@ public class Phone extends Device implements Exportable<List<String>> {
         }
     }
 
+    private void validateMessage(Message msg) throws InvalidMessageException {
+        //VALIDAMOS MSG NO NULL Y TAMAÑO DE CONTENIDO
+        if (msg == null || msg.getContent() == null || msg.getContent().trim().length() < 2
+                ) {
+            throw new InvalidMessageException("Mensaje inválido: contenido nulo o demasiado corto.");
+        }
+        //VALIDAMOS QUE PROVIENEN DE SENDER SYSTEM
+        if (msg.getType() == MessageType.SYSTEM && !"SYSTEM".equals(msg.getSender())) {
+            throw new InvalidMessageException("Mensajes de tipo SYSTEM deben ser enviados por SYSTEM.");
+        }
+
+    }
+
     @Override
     public void receiveMessage(Message msg) {
-        if (msg.getContent() == null || msg.getContent().trim().isEmpty()) return; //No almacenar msg vacios
-        if (msg.getSender() != "SYSTEM" && msg.getType() == MessageType.SYSTEM) return;
-        //Ignorar msg que no vienen (Sender) de "SYSTEM" y MessageType no es SYSTEM
+        if (msg == null || msg.getContent() == null || msg.getContent().trim().isEmpty()) return; //No almacenar msg vacios
+        //Ignorar msg que no vienen (Sender) de "SYSTEM"
+        if (!"SYSTEM".equals(msg.getSender()))return;
         addMessage(msg);
     }
 
     private void addMessage(Message msg) {
+        //AÑADIMOS HISTORIAL CICLICO
         historial[indice] = msg;
         indice = (indice + 1) % capacity;
     }
@@ -60,22 +75,6 @@ public class Phone extends Device implements Exportable<List<String>> {
         return exported;
     }
 
-    public <T extends Message> List<T> filterTextMessages() {
-        List<T> filtered = new ArrayList<>();
-        for (Message msg : historial) {
-            if (msg != null && msg.getType() == MessageType.TEXT) {
-                filtered.add((T) msg);
-            }
-        }
-        return filtered;
-    }
-
-    private void validateMessage(Message msg) throws InvalidMessageException {
-        if (msg.getContent() == null || msg.getContent().trim().length() < 2
-                || (msg.getType() == MessageType.SYSTEM && !"SYSTEM".equals(getName()))) {
-            throw new InvalidMessageException("Mensaje inválido: contenido nulo o demasiado corto.");
-        }
-    }
 }
 
 
