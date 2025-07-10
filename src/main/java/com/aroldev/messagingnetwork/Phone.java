@@ -11,6 +11,7 @@ public class Phone extends Device implements Exportable<List<String>> {
     private Message[] historial;
     private int capacity;
     private int indice = 0;
+    boolean hayMensajes = false;
 
     public Phone(String name, int id, int capacity) {
         super(name, id);
@@ -78,11 +79,22 @@ public class Phone extends Device implements Exportable<List<String>> {
     @Override
     public List<String> export() {
         List<String> exported = new ArrayList<>();
+        if (historial == null || historial.length == 0) {
+            exported.add("NO HAY HISTORIAL DE MENSAJES");
+            return exported;
+        }
+
         for (Message msg : historial) {
             if (msg != null) {
                 exported.add(msg.formatDate() + " - " + msg.getContent());
+                hayMensajes = true;
             }
         }
+
+        if (!hayMensajes) {
+            exported.add("NO HAY HISTORIAL DE MENSAJES");
+        }
+
         return exported;
     }
 
